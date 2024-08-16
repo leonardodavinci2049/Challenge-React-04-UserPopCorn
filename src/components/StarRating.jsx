@@ -8,14 +8,16 @@ const StarRating = ({
   className = "",
   messages = [],
   defaultRating = 0,
-  onsetRating = () => {},
+  onSetRating = () => {},
 }) => {
   const [rating, setRating] = useState(defaultRating);
   const [hoverRating, setHoverRating] = useState(0);
 
   function handleRating(rate) {
+    // console.log("RATE!!!!");
+    // console.log(rate);
     setRating(rate);
-    onsetRating(rate);
+    onSetRating(rate);
   }
 
   const textStyle = {
@@ -96,13 +98,6 @@ function Star({ onRate, onHoverIn, onHoverOut, full, color, size }) {
   );
 }
 
-
-
-
-
-
-
-
 const containerStyle = {
   display: "flex",
   alignItems: "center",
@@ -113,7 +108,6 @@ const starContainerStyle = {
   display: "flex",
   gap: "4px",
 };
-
 
 StarRating.propTypes = {
   maxRating: PropTypes.number,

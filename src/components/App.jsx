@@ -1,37 +1,75 @@
 import Navbar from "./Navbar";
 import Main from "./Main";
-import { tempMovieData } from "../data/movies";
-import { useState } from "react";
+//import { tempMovieData } from "../data/movies";
+import { useEffect, useState } from "react";
 import NumResults from "./Numresults";
-
+import { useMovies } from "../hooks/useMovies";
 import MovieList from "./MovieList";
 
 import Box from "./ListBox";
 import WatchedSummary from "./WatchedSummary";
 import WatchedMovieList from "./WatchedMovieList";
-import { tempWatchedData } from "../data/watched";
+
+import Loader from "./Loader";
+import ErrorMessage from "./ErrorMessage";
+import Search from "./Search";
+import MovieDetails from "./MovieDetails";
+import { useLocalStorageState } from "../hooks/useLocalStorageState";
 
 function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState([...tempWatchedData]);
-  console.log(movies.typeof);
-  console.log(movies.lenght);
+  const [query, setQuery] = useState("inception");
+  const [selectedId, setSelectedId] = useState(null);
+
+  const { movies, isLoading, error } = useMovies(query);
+
+  const [watched, setWatched] = useLocalStorageState([], "watched");
+
+  function handleSelectMovie(id) {
+    setSelectedId((selectedID) => (id === selectedID ? null : id));
+  }
+
+  function handleCloseMovie(id) {
+    setSelectedId(null);
+  }
+  function handleAddWatched(movie) {
+    setWatched((watched) => [...watched, movie]);
+  }
+
+  function handleDeleteWatched(id) {
+    setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
+  }
 
   return (
     <>
       <Navbar>
+        <Search query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </Navbar>
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {isLoading && <Loader />}
+          {!isLoading && !error && (
+            <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
+          )}
+          {error && <ErrorMessage message={error} />}
         </Box>
-
         <Box>
-          <>
-            <WatchedSummary watched={watched} />
-            <WatchedMovieList watched={watched} />
-          </>
+          {selectedId ? (
+            <MovieDetails
+              selectedId={selectedId}
+              onCloseMovie={handleCloseMovie}
+              onAddWatched={handleAddWatched}
+              watched={watched}
+            ></MovieDetails>
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMovieList
+                watched={watched}
+                onDeleteWatched={handleDeleteWatched}
+              />
+            </>
+          )}
         </Box>
       </Main>
     </>

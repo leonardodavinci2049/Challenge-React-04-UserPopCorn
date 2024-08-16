@@ -16,13 +16,13 @@ const WatchedSummary = ({ watched }) => {
           <span>#</span> <span>{watched.length} movies</span>
         </p>
         <p>
-          <span>⭐</span> <span>{avgImdbRating}</span>
+          <span>⭐</span> <span>{avgImdbRating.toFixed(2)}</span>
         </p>
         <p>
-          <span>🌟</span> <span>{avgUserRating}</span>
+          <span>🌟</span> <span>{avgUserRating.toFixed(2)}</span>
         </p>
         <p>
-          <span>⏳</span> <span>{avgRuntime}</span>
+          <span>⏳</span> <span>{avgRuntime.toFixed(2)}</span>
         </p>
       </div>
     </div>
