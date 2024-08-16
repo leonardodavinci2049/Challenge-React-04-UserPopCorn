@@ -1,4 +1,4 @@
-const KEY = "46744e4c";
+const KEY = process.env.REACT_APP_API_KEY;
 
 export const getMoviedetails = async (id) => {
   const url = `https://www.omdbapi.com/?apikey=${KEY}&i=${id}`;
